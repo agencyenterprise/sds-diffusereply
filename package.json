@@ -5,7 +5,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node index.js",
+    "start": "babel-node index.js",
     "dev": "nodemon --exec babel-node index.js"
   },
   "engines": {
@@ -21,14 +21,14 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.18.10",
-    "@babel/preset-env": "^7.19.0",
+    "nodemon": "^2.0.15",
     "eslint-config-prettier": "^6.1.0",
     "eslint-plugin-prettier": "^3.1.0",
-    "nodemon": "^2.0.15",
     "prettier": "^1.18.2"
   },
   "dependencies": {
+    "@babel/cli": "^7.18.10",
+    "@babel/preset-env": "^7.19.0",
     "@babel/core": "^7.19.0",
     "@babel/node": "^7.18.10",
     "dotenv": "^15.0.0",
