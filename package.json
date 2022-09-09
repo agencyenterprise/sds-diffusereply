@@ -8,6 +8,9 @@
     "start": "node app.js",
     "dev": "nodemon --exec babel-node index.js"
   },
+  "engines": {
+    "node": "14.x"
+  },
   "keywords": [
     "twitter",
     "stable diffusion",
