@@ -37,6 +37,7 @@
     "node-fetch": "^3.2.10",
     "replicate-js": "github:nicholascelestin/replicate-js",
     "ts-node": "^10.9.1",
-    "twitter-api-v2": "^1.12.5"
+    "twitter-api-v2": "^1.12.5",
+    "typescript": "^4.8.3"
   }
 }
