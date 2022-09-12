@@ -9,7 +9,7 @@
     "dev": "nodemon --exec babel-node index.js"
   },
   "engines": {
-    "node": "14.x"
+    "node": "16.x"
   },
   "keywords": [
     "twitter",
