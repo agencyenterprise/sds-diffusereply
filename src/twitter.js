@@ -4,7 +4,7 @@ dotenv.config();
 import { TwitterApi, ETwitterStreamEvent } from "twitter-api-v2";
 
 import { callTextToImageReplicate } from "./replicate.js";
-import { prepareFinalPrompt, urlToBuffer, log } from "./util.js";
+import { prepareFinalPrompt, urlToBuffer, log, logError } from "./util.js";
 
 const {
   TWITTER_API_KEY,
@@ -33,6 +33,7 @@ export const getMentionAndReply = async id => {
       expansions: ["referenced_tweets.id"]
     });
     const tweetReply = tweetInfo?.includes?.tweets[0];
+    if (!tweetReply?.id) throw new Error("No reply tweet was detected.");
     const repliedTweetInfo = await readWriteClient.v2.singleTweet(
       tweetReply.id,
       {
@@ -58,7 +59,7 @@ export const getMentionAndReply = async id => {
       }
     };
   } catch (e) {
-    console.error(e);
+    logError(e);
   }
 };
 
@@ -72,7 +73,7 @@ const uploadImageAndReply = async (tweet_id, prompt, image_buffer) => {
     twitterClientV1.v1.uploadMedia(Buffer.from(image_buffer), { type: "png" })
   ]);
 
-  const replyPrompt = prompt ? ` "${prompt}"` : "";
+  // const replyPrompt = prompt ? ` "${prompt}"` : "";
 
   const response = await twitterClientV1.v2.reply(
     `#DiffuseReply by AE.studio`,
@@ -144,6 +145,6 @@ export const startStream = async () => {
 
     return stream;
   } catch (e) {
-    console.error(e);
+    logError(e);
   }
 };
