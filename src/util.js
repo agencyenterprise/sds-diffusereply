@@ -27,5 +27,10 @@ const filterQuoteFromText = text => {
 
 export const log = (...args) => {
   console.log("=================");
-  console.log("LOG:", ...args);
+  console.log("🔵 LOG:", ...args);
+};
+
+export const logError = (...args) => {
+  console.error("+++++++++++++++++");
+  console.error("🟥 ERROR:", ...args);
 };
