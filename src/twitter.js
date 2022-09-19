@@ -88,31 +88,35 @@ const uploadImageAndReply = async (tweet_id, prompt, image_buffer) => {
 };
 
 export const workflowDiffuseReply = async id => {
-  const { mention, replied } = await getMentionAndReply(id);
-  log("Got related Tweet info.");
+  try {
+    const { mention, replied } = await getMentionAndReply(id);
+    log("Got related Tweet info.");
 
-  const finalPrompt = prepareFinalPrompt(mention, replied);
+    const finalPrompt = prepareFinalPrompt(mention, replied);
 
-  log("Final prompt:", finalPrompt);
+    log("Final prompt:", finalPrompt);
 
-  log("Generating Stable Diffusion image from tweet...");
-  const generatedImageURL = await generateTxtImgToImg(
-    finalPrompt,
-    replied.media ? replied.media[0].url : null
-  );
-  log("Generation sucessful.");
+    log("Generating Stable Diffusion image from tweet...");
+    const generatedImageURL = await generateTxtImgToImg(
+      finalPrompt,
+      replied.media ? replied.media[0].url : null
+    );
+    log("Generation sucessful.");
 
-  const generatedImageBuffer = await urlToBuffer(generatedImageURL);
+    const generatedImageBuffer = await urlToBuffer(generatedImageURL);
 
-  log("Uploading picture and replying...");
-  const postedTweet = await uploadImageAndReply(
-    mention.id,
-    finalPrompt,
-    generatedImageBuffer
-  );
-  log("Success.");
+    log("Uploading picture and replying...");
+    const postedTweet = await uploadImageAndReply(
+      mention.id,
+      finalPrompt,
+      generatedImageBuffer
+    );
+    log("Success.");
 
-  return postedTweet;
+    return postedTweet;
+  } catch (e) {
+    logError(e.message);
+  }
 };
 
 export const startStream = async () => {
