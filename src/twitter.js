@@ -126,6 +126,8 @@ export const startStream = async () => {
     const rules = await readWriteClient.v2.streamRules();
     const rulesIdList = rules?.data?.map(({ id }) => id);
 
+    log("Rules", rulesIdList);
+
     rulesIdList &&
       (await twitterClient.v2.updateStreamRules({
         delete: {
