@@ -25,7 +25,7 @@ const twitterClientV1 = new TwitterApi({
 const twitterClient = new TwitterApi(TWITTER_API_BEARER);
 const readWriteClient = twitterClient.readWrite;
 
-const TWITTER_STREAM_RULE = `"@${TWITTER_BOT_HANDLE}"`;
+const TWITTER_STREAM_RULE = `@${TWITTER_BOT_HANDLE}`;
 
 export const getMentionAndReply = async id => {
   try {
@@ -126,7 +126,7 @@ export const startStream = async () => {
     const rules = await readWriteClient.v2.streamRules();
     const rulesIdList = rules?.data?.map(({ id }) => id);
 
-    log("Rules", rulesIdList);
+    rulesIdList && log("Pre-existing rules:", rulesIdList);
 
     rulesIdList &&
       (await twitterClient.v2.updateStreamRules({
