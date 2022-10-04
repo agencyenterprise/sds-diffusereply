@@ -123,6 +123,16 @@ export const startStream = async () => {
   try {
     const stream = twitterClient.v2.searchStream({ autoConnect: false });
 
+    const rules = await readWriteClient.v2.streamRules();
+    const rulesIdList = rules?.data?.map(({ id }) => id);
+
+    rulesIdList &&
+      (await twitterClient.v2.updateStreamRules({
+        delete: {
+          ids: rulesIdList
+        }
+      }));
+
     await twitterClient.v2.updateStreamRules({
       add: [{ value: TWITTER_STREAM_RULE }]
     });
