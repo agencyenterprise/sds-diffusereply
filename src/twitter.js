@@ -142,9 +142,11 @@ export const startStream = async () => {
     stream.on(ETwitterStreamEvent.Data, async ({ data }) => {
       const isValidQuote = data.text.match(`@${TWITTER_BOT_HANDLE}`)?.length;
 
+      log(data?.text, data?.id, isValidQuote);
+
       if (data.id && isValidQuote) {
         log("Received request. Starting...");
-        await workflowDiffuseReply(data.id);
+        // await workflowDiffuseReply(data.id);
         log("Workflow finished.");
       }
     });
