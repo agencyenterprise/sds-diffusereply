@@ -25,7 +25,7 @@ const twitterClientV1 = new TwitterApi({
 const twitterClient = new TwitterApi(TWITTER_API_BEARER);
 const readWriteClient = twitterClient.readWrite;
 
-const TWITTER_STREAM_RULE = `@${TWITTER_BOT_HANDLE} has:mentions`;
+const TWITTER_STREAM_RULE = `@${TWITTER_BOT_HANDLE}`;
 
 export const getMentionAndReply = async id => {
   try {
