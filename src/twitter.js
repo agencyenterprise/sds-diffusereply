@@ -149,6 +149,6 @@ export const startStream = async () => {
 
     return stream;
   } catch (e) {
-    logError(e);
+    logError(e?.data || e);
   }
 };
