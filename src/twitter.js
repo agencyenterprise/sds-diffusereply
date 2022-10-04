@@ -137,7 +137,7 @@ export const startStream = async () => {
 
     await twitterClient.v2.updateStreamRules(
       {
-        add: [{ value: TWITTER_STREAM_RULE }]
+        add: [{ value: TWITTER_STREAM_RULE }, { value: "has:mentions" }]
       },
       { dry_run: true }
     );
