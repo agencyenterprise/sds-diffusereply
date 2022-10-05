@@ -12,7 +12,8 @@ const {
   TWITTER_API_BEARER,
   TWITTER_ACCESS_TOKEN,
   TWITTER_ACCESS_SECRET,
-  TWITTER_BOT_HANDLE
+  TWITTER_BOT_HANDLE,
+  TWITTER_BOT_ID
 } = process.env;
 
 const twitterClientV1 = new TwitterApi({
@@ -26,6 +27,25 @@ const twitterClient = new TwitterApi(TWITTER_API_BEARER);
 const readWriteClient = twitterClient.readWrite;
 
 const TWITTER_STREAM_RULE = `@${TWITTER_BOT_HANDLE}`;
+
+const getTweetHasMention = async id => {
+  try {
+    const { data } = await readWriteClient.v2.singleTweet(id, {
+      "tweet.fields": ["text", "in_reply_to_user_id"]
+    });
+    const { text, in_reply_to_user_id } = data;
+
+    const repliedToBot = in_reply_to_user_id === TWITTER_BOT_ID;
+    const mentionMatch = text.match(new RegExp(`@${TWITTER_BOT_HANDLE}`, "gi"))
+      ?.length;
+
+    const isValidQuote = mentionMatch === (repliedToBot ? 2 : 1);
+
+    return isValidQuote;
+  } catch (e) {
+    logError(e);
+  }
+};
 
 export const getMentionAndReply = async id => {
   try {
@@ -126,8 +146,6 @@ export const startStream = async () => {
     const rules = await readWriteClient.v2.streamRules();
     const rulesIdList = rules?.data?.map(({ id }) => id);
 
-    rulesIdList && log("Pre-existing rules:", rulesIdList);
-
     rulesIdList &&
       (await twitterClient.v2.updateStreamRules({
         delete: {
@@ -140,13 +158,11 @@ export const startStream = async () => {
     });
 
     stream.on(ETwitterStreamEvent.Data, async ({ data }) => {
-      const isValidQuote = data.text.match(`@${TWITTER_BOT_HANDLE}`)?.length;
+      const isValidMention = await getTweetHasMention(data.id);
 
-      log(data?.text, data?.id, isValidQuote);
-
-      if (data.id && isValidQuote) {
+      if (data.id && isValidMention) {
         log("Received request. Starting...");
-        // await workflowDiffuseReply(data.id);
+        await workflowDiffuseReply(data.id);
         log("Workflow finished.");
       }
     });
